@@ -1,32 +1,24 @@
-import { Stack } from '@mui/material';
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import { sidebarContent } from '../config/sidebar';
+import { Stack, Typography } from '@mui/material';
+import { fDate } from '../utils/formatTime';
 
-function HeaderTaskContent() {
-  const { pathname } = useLocation();
-  const { taskList } = useSelector((state) => state.taskList);
-
-  const title = useMemo(() => {
-    const list = [...sidebarContent, ...taskList];
-    const task = list.find((task) => task.navigatePath === pathname.slice(1));
-
-    return task?.name || '';
-  }, [pathname, taskList]);
+function HeaderTaskContent({title}) {
 
   return (
-    <Stack
-      sx={{
-        height: 48,
-        // backgroundColor: 'red',
-        justifyContent: 'center',
-        fontSize: 20,
-        fontWeight: 500,
-        color: '#2564CF',
-      }}
-    >
-      {title}
+    <Stack sx={{ pb: '16px' }}>
+      <Stack
+        sx={{
+          height: 48,
+          justifyContent: 'center',
+          fontSize: 20,
+          fontWeight: 500,
+          color: '#2564CF',
+        }}
+      >
+        {title}
+      </Stack>
+      {title === 'My day' && (
+        <Typography sx={{ fontSize: 12, color: '#605e5c' }}>{fDate(new Date())}</Typography>
+      )}
     </Stack>
   );
 }

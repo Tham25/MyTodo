@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getDataFromStorage, setDataToStorage } from '../localStorage';
 
+const keyStorage = 'taskList';
+
 const initialState = {
   error: '',
   taskList: [],
@@ -13,24 +15,14 @@ const slice = createSlice({
     setTaskList(state, action) {
       state.taskList = action.payload;
     },
-
-    // addNewTask(state, action) {
-    //   state.taskList = [...state.taskList, ac];
-    //   console.log('setTaskList', state.taskList);
-    // },
-
-    // deleteTask(state, action) {
-    //   state.taskList = state.taskList.filter((item) => item !== action.payload);
-    // },
   },
 });
 
-// export const { setTaskList, addNewTask, deleteTask } = slice.actions;
 export default slice.reducer;
 
 export const getTaskList = () => (dispatch) => {
   try {
-    const result = getDataFromStorage('task');
+    const result = getDataFromStorage(keyStorage);
 
     if (result) {
       dispatch(slice.actions.setTaskList(JSON.parse(result)));
@@ -43,7 +35,6 @@ export const getTaskList = () => (dispatch) => {
 export const addNewTaskToList = (nameTask) => (dispatch, getState) => {
   const { taskList } = getState().taskList;
   const count = taskList.filter((task) => {
-    // const nameRg = new RegExp('^[^(]*');
     return task.name.match(/^[^(]*/)[0] === nameTask;
   }).length;
 
@@ -56,12 +47,12 @@ export const addNewTaskToList = (nameTask) => (dispatch, getState) => {
   const navigatePath = `task/${nameEnglish}`;
 
   dispatch(slice.actions.setTaskList([...taskList, { name, navigatePath }]));
-  setDataToStorage('task', [...taskList, { name, navigatePath }]);
+  setDataToStorage(keyStorage, [...taskList, { name, navigatePath }]);
 };
 
-export const deleteTaskFromList = (task) => (dispatch, getState) => {
+export const deleteTaskInList = (task) => (dispatch, getState) => {
   const oldList = [...getState().taskList.taskList];
   const list = oldList.filter((item) => item !== task);
   dispatch(slice.actions.setTaskList(list));
-  setDataToStorage('task', list);
+  setDataToStorage(keyStorage, list);
 };

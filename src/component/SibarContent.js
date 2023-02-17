@@ -1,48 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  Box,
-  Divider,
-  Input,
-  InputAdornment,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  Stack,
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Box, Divider, ListItem, ListItemButton, ListItemIcon, Stack } from '@mui/material';
 
-import { addNewTaskToList, getTaskList } from '../redux/taskList';
+import { addNewTaskToList } from '../redux/taskList';
 import { sidebarContent } from '../config/sidebar';
 import ListTaskUserCreate from './ListTaskUserCreate';
+import InputAddTask from './InputAddTask';
 
 function SidebarContent() {
-  const [valueInput, setValueInput] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { pathname } = useLocation();
 
-  const { taskList } = useSelector((state) => state.taskList);
-
-  // first load
-  useEffect(() => {
-    dispatch(getTaskList());
-  }, [dispatch]);
-
-  const handleSubmit = (e) => {
-    if (e.keyCode === 13 && e.target.value !== '') {
-      dispatch(addNewTaskToList(e.target.value));
-      setValueInput('');
-      e.preventDefault();
-      e.target.blur();
-
-      console.log('taskList', taskList);
-    }
-  };
-
-  const handleChangeText = (text) => {
-    setValueInput(text);
+  const action = (e) => {
+    dispatch(addNewTaskToList(e.target.value));
   };
 
   return (
@@ -68,31 +39,7 @@ function SidebarContent() {
       <Divider />
       <ListTaskUserCreate />
 
-      <Input
-        onKeyDown={handleSubmit}
-        sx={{
-          p: '8px 16px',
-          '& .MuiInputBase-input.MuiInput-input:focus::placeholder': {
-            color: '#727272',
-          },
-          '& .MuiInputBase-input.MuiInput-input::placeholder': {
-            color: '#2564CF',
-            opacity: 1,
-            fontSize: 14,
-          },
-        }}
-        autoComplete="off"
-        value={valueInput}
-        onChange={(e) => handleChangeText(e.target.value)}
-        disableUnderline
-        placeholder="Create new list"
-        id="input-with-icon-adornment"
-        startAdornment={
-          <InputAdornment sx={{ mr: '16px' }} position="start">
-            <AddIcon sx={{ color: '#2564CF', fontSize: 20 }} />
-          </InputAdornment>
-        }
-      />
+      <InputAddTask action={action} placeholder="Create new list" />
     </Stack>
   );
 }

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, Popover } from '@mui/material';
@@ -6,12 +6,17 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useDispatch, useSelector } from 'react-redux';
-import { addNewTaskToList, deleteTaskFromList } from '../redux/taskList';
+import { addNewTaskToList, deleteTaskInList, getTaskList } from '../redux/taskList';
 import { sidebarContent } from '../config/sidebar';
 
 function ListTaskUserCreate() {
   const { taskList } = useSelector((state) => state.taskList);
+  const dispatch = useDispatch();
 
+  // first load
+  useEffect(() => {
+    dispatch(getTaskList());
+  }, [dispatch]);
   return (
     <List>
       {taskList.map((item, index) => {
@@ -87,7 +92,7 @@ const PopoverAction = ({ anchorRef, item, open, handleClose }) => {
   };
 
   const handleDeleteTask = () => {
-    dispatch(deleteTaskFromList(item));
+    dispatch(deleteTaskInList(item));
     handleClose();
 
     // check index
