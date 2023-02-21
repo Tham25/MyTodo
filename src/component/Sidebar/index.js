@@ -1,12 +1,12 @@
 import { Box, Drawer, Slide } from '@mui/material';
 
-import useResponsive from '../utils/useResponsive';
+import useResponsive from '../../utils/useResponsive';
 import SidebarContent from './SibarContent';
-
-const DRAWER_WIDTH = 250;
 
 function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const isDesktop = useResponsive('up', 'md');
+  const isMobile = useResponsive('down', 'sm');
+  const DRAWER_WIDTH = isMobile ? 200 : 250;
 
   if (!isDesktop) {
     return (

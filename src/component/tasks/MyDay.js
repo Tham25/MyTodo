@@ -1,16 +1,22 @@
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import HeaderTaskContent from '../HeaderTaskContent';
 import TaskContentList from '../TaskContentList';
 
 function MyDay() {
+  // const [isOpenTaskSteps, setIsOpenTaskSteps] = useState(false);
+
+  // const hanldeOpenTaskSteps = (item) => {
+  //   console.log("openopen open", item);
+  //   setIsOpenTaskSteps(true);
+  // }
+
   return (
-    <Box>
-      <Box>
-        <HeaderTaskContent title='My day' />
+    <Stack direction="row" sx={{ height: '100%', overflow: 'hidden' }}>
+      <Box sx={{ flex: 1, padding: '16px 24px' }}>
+        <HeaderTaskContent title="My day" />
         <TaskContentList taskListName="My day" />
       </Box>
-      {/* phan drag content to do*/}
-    </Box>
+    </Stack>
   );
 }
 

@@ -2,10 +2,10 @@ import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Divider, ListItem, ListItemButton, ListItemIcon, Stack } from '@mui/material';
 
-import { addNewTaskToList } from '../redux/taskList';
-import { sidebarContent } from '../config/sidebar';
-import ListTaskUserCreate from './ListTaskUserCreate';
-import InputAddTask from './InputAddTask';
+import { addNewTaskToList } from '../../redux/taskList';
+import { sidebarContent } from '../../config/sidebar';
+import ListTaskUserCreate from '../ListTaskUserCreate';
+import InputAddTask from '../InputAddTask';
 
 function SidebarContent() {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ function SidebarContent() {
       <Divider />
       <ListTaskUserCreate />
 
-      <InputAddTask action={action} placeholder="Create new list" />
+      <InputAddTask action={action} placeholder="Create new list" sx={{ padding: '8px 12px' }} />
     </Stack>
   );
 }

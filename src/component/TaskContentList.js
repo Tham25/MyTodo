@@ -5,18 +5,16 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box, Button, Collapse, Divider, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  addNewTaskContentToList,
-  getTaskContentList,
-  updateTaskContentInList,
-} from '../redux/taskContentList';
+import { addNewTaskContentToList, getTaskContentList } from '../redux/taskContentList';
 import InputAddTask from './InputAddTask';
-import TaskItem from './TaskItem';
+import TaskContentItem from './TaskContentItem';
 
 function TaskContentList({ taskListName }) {
   const dispatch = useDispatch();
   const { taskContentList } = useSelector((state) => state.taskContent);
   const [openListDone, setOpentListDone] = useState(false);
+
+  console.log('taskContentList', taskContentList);
 
   const todoList = useMemo(
     () => taskContentList.filter((item) => item.taskListName === taskListName),
@@ -32,39 +30,29 @@ function TaskContentList({ taskListName }) {
     [todoList],
   );
 
-  // console.log('todoListtodoList', todoList);
-
-  // first load
   useEffect(() => {
     dispatch(getTaskContentList());
-  }, [dispatch]);
+  }, [dispatch, taskListName]);
 
   const action = (e) => {
     dispatch(addNewTaskContentToList(taskListName, e.target.value));
   };
 
-  const handleChangeStateTask = (item, stateTask) => {
-    // update trang thai cua task
-    dispatch(updateTaskContentInList(item, stateTask));
-  };
-
   return (
-    <Box>
+    <Box className="task-content-list">
       <InputAddTask action={action} placeholder="Create a new task" isTask />
+      {/* <Box sx={{ overflowY: 'auto', height: '500px' }}> */}
       {todoListDoing.map((item, index) => (
-        <TaskItem
-          key={index}
-          taskContent={item}
-          handleStateTask={(stateTask) => handleChangeStateTask(item, stateTask)}
-        />
+        <TaskContentItem key={index} taskContentItem={item} />
       ))}
       {todoListDone.length !== 0 && (
         <Stack>
           <Button
             disableRipple
             sx={{
+              mt: 2,
               color: '#000',
-              height: '52px',
+              // height: '36px',
               justifyContent: 'start',
               '&:hover': { backgroundColor: 'transparent' },
               textTransform: 'none',
@@ -84,15 +72,12 @@ function TaskContentList({ taskListName }) {
           {!openListDone && <Divider />}
           <Collapse in={openListDone} timeout="auto" unmountOnExit>
             {todoListDone.map((item, index) => (
-              <TaskItem
-                key={index}
-                taskContent={item}
-                handleStateTask={(stateTask) => handleChangeStateTask(item, stateTask)}
-              />
+              <TaskContentItem key={index} taskContentItem={item} />
             ))}
           </Collapse>
         </Stack>
       )}
+      {/* </Box> */}
     </Box>
   );
 }
