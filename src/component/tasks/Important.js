@@ -1,11 +1,11 @@
-import { Box } from '@mui/material';
-import HeaderTaskContent from '../HeaderTaskContent';
+import { Box, Stack } from '@mui/material';
+import TaskContent from '../TaskContent';
 
 function Important() {
   return (
-    <Box>
-      <HeaderTaskContent />
-    </Box>
+    <Stack sx={{ height: '100%' }}>
+      <TaskContent title="Important" taskName="Important" />
+    </Stack>
   );
 }
 

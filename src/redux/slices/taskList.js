@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getDataFromStorage, setDataToStorage } from '../localStorage';
+import { getDataFromStorage, setDataToStorage } from '../../localStorage';
+import { deleteTaskContentInList } from './taskContentList';
 
 const keyStorage = 'taskList';
 
@@ -8,7 +9,8 @@ const initialState = {
   taskList: [],
 };
 
-const slice = createSlice({
+// {name: 'd', navigatePath: 'task/d', isActive: false}
+const taskSlice = createSlice({
   name: 'taskListSilce',
   initialState,
   reducers: {
@@ -18,14 +20,14 @@ const slice = createSlice({
   },
 });
 
-export default slice.reducer;
+export default taskSlice.reducer;
 
 export const getTaskList = () => (dispatch) => {
   try {
     const result = getDataFromStorage(keyStorage);
 
     if (result) {
-      dispatch(slice.actions.setTaskList(JSON.parse(result)));
+      dispatch(taskSlice.actions.setTaskList(JSON.parse(result)));
     }
   } catch (error) {
     console.log('ERROR getTaskList', error);
@@ -44,15 +46,19 @@ export const addNewTaskToList = (nameTask) => (dispatch, getState) => {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, '');
 
-  const navigatePath = `task/${nameEnglish}`;
+  const navigatePath = `task/${nameEnglish}`; // TaskUserAdd
 
-  dispatch(slice.actions.setTaskList([...taskList, { name, navigatePath }]));
+  dispatch(taskSlice.actions.setTaskList([...taskList, { name, navigatePath }]));
   setDataToStorage(keyStorage, [...taskList, { name, navigatePath }]);
 };
 
 export const deleteTaskInList = (task) => (dispatch, getState) => {
   const oldList = [...getState().taskList.taskList];
-  const list = oldList.filter((item) => item !== task);
-  dispatch(slice.actions.setTaskList(list));
+
+  const list = oldList.filter((item) => item.name !== task.name);
+  dispatch(taskSlice.actions.setTaskList(list));
   setDataToStorage(keyStorage, list);
+
+  // delete task content
+  dispatch(deleteTaskContentInList(-1, task.name));
 };

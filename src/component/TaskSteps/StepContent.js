@@ -1,66 +1,36 @@
+import { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, IconButton } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import styled from 'styled-components';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ClearIcon from '@mui/icons-material/Clear';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import StarIcon from '@mui/icons-material/Star';
+import { TbSun } from 'react-icons/tb';
 
 import InputAddTask from '../InputAddTask';
-import {
-  addNewStepContentToList,
-  deleteStepContentInList,
-  updateStepContentInList,
-} from '../../redux/stepContentList';
+import { addNewStepContentToList, getStepContentList } from '../../redux/slices/stepContentList';
 import StepItem from './StepItem';
-import { updateTaskContentInList } from '../../redux/taskContentList';
-import { useMemo, useRef, useState } from 'react';
-import ConfirmDelete from './ConfirmDelete';
 import FooterAction from './FooterAction';
+import TaskContentItem from '../TaskContent/TaskContentItem';
+import { setTaskContentOpen, updateTaskContentInList } from '../../redux/slices/taskContentList';
 
 function StepContent() {
   const dispatch = useDispatch();
-  const { stepContentList } = useSelector((state) => state.stepContent);
-  const { taskContentOpenId, taskContentList } = useSelector((state) => state.taskContent);
-  const [openFormDelete, setOpenFormDelete] = useState(false);
-  const stepContentDelete = useRef(null);
+  const stepContentList = useSelector((state) => state.stepContent.stepContentList);
+  const taskContentOpen = useSelector((state) => state.taskContent.taskContentOpen);
 
-  const taskContentActive = useMemo(() => {
-    return taskContentList.find((item) => item.id === taskContentOpenId);
-  }, [taskContentList, taskContentOpenId]);
+  useEffect(() => {
+    dispatch(getStepContentList());
+  }, [dispatch]);
 
   const listStep = useMemo(() => {
-    return stepContentList.filter((item) => item.taskContentId === taskContentActive?.id);
-  }, [stepContentList, taskContentActive]);
-
-  const handleChangeStatusTaskContent = (e) => {
-    dispatch(updateTaskContentInList({ ...taskContentActive, isComplete: e.target.checked }));
-  };
-
-  const handleChangeNameTaskContent = (newName) => {
-    dispatch(updateTaskContentInList({ ...taskContentActive, taskContentName: newName }));
-  };
+    return stepContentList.filter((item) => item.taskContentId === taskContentOpen?.id);
+  }, [stepContentList, taskContentOpen]);
 
   const handleAddNewStep = (e) => {
-    dispatch(addNewStepContentToList(taskContentActive.id, e.target.value));
+    dispatch(addNewStepContentToList(taskContentOpen.id, e.target.value));
   };
 
-  const handleChangeStatusStepContent = (e, stepContent) => {
-    dispatch(updateStepContentInList({ ...stepContent, isComplete: e.target.checked }));
-  };
-
-  const handleChangeNameStepContent = (newName, stepContent) => {
-    dispatch(updateStepContentInList({ ...stepContent, stepContentName: newName }));
-  };
-
-  const handleDeleteStepContent = () => {
-    dispatch(deleteStepContentInList(stepContentDelete.current.id));
-    onClose();
-  };
-
-  const onClose = () => {
-    stepContentDelete.current = null;
-    setOpenFormDelete(false);
+  const handleMyday = () => {
+    dispatch(updateTaskContentInList({ ...taskContentOpen, isMyday: !taskContentOpen.isMyday }));
+    dispatch(setTaskContentOpen({ ...taskContentOpen, isMyday: !taskContentOpen.isMyday }));
   };
 
   return (
@@ -73,19 +43,14 @@ function StepContent() {
           borderTopRightRadius: 8,
         }}
       >
-        <StepItem
-          checkedStatus={taskContentActive?.isComplete}
-          title={taskContentActive?.taskContentName}
-          handleUpdate={handleChangeNameTaskContent}
-          handleChangeCheckBox={handleChangeStatusTaskContent}
-          actionName="Add important"
-          icon={<StarBorderIcon sx={{ fontSize: 20, color: '#2564CF' }} />}
-          sx={{ fontWeight: 600, fontSize: 16 }}
+        <TaskContentItem
+          taskContentItem={taskContentOpen}
+          isTitle
+          sxIcon={{ width: 20, padding: 0 }}
         />
       </Box>
       <Box
         sx={{
-          // mt: '16px',
           overflowX: 'hidden',
           overflowY: 'scroll',
           position: 'relative',
@@ -95,19 +60,7 @@ function StepContent() {
         <Box sx={{ padding: '0px 16px 0px 24px' }}>
           <ListStep>
             {listStep.map((item, index) => (
-              <StepItem
-                key={index}
-                checkedStatus={item.isComplete}
-                title={item.stepContentName}
-                handleUpdate={(newName) => handleChangeNameStepContent(newName, item)}
-                handleChangeCheckBox={(e) => handleChangeStatusStepContent(e, item)}
-                actionName="Delete step"
-                handleAction={() => {
-                  stepContentDelete.current = item;
-                  setOpenFormDelete(true);
-                }}
-                icon={<ClearIcon sx={{ fontSize: 18, fontWeight: 100 }} />}
-              />
+              <StepItem key={index} stepItem={item} />
             ))}
           </ListStep>
           <InputAddTask
@@ -119,17 +72,38 @@ function StepContent() {
               borderBottomRightRadius: 5,
             }}
           />
-          {openFormDelete && (
-            <ConfirmDelete
-              title={stepContentDelete.current.stepContentName}
-              open={openFormDelete}
-              onClose={onClose}
-              handleDelete={handleDeleteStepContent}
-            />
-          )}
+          <Button
+            disableRipple
+            onClick={handleMyday}
+            sx={{
+              mt: 1,
+              backgroundColor: '#fff',
+              textTransform: 'none',
+              width: '100%',
+              height: '52px',
+              '&:hover': { backgroundColor: '#F3F2F1' },
+              p: 2,
+              justifyContent: 'start',
+              color: taskContentOpen.isMyday ? '#2564CF' : '#605e5c',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                width: '32px',
+                mr: 2,
+                justifyContent: 'center',
+              }}
+            >
+              <TbSun size={20} />
+            </Box>
+            <Box sx={{ fontWeight: 400 }}>
+              {taskContentOpen.isMyday ? 'Task was added in Myday' : 'Add to Myday'}
+            </Box>
+          </Button>
         </Box>
       </Box>
-      <FooterAction taskContentActive={taskContentActive} />
+      <FooterAction taskContentActive={taskContentOpen} />
     </Box>
   );
 }

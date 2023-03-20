@@ -1,14 +1,14 @@
 import { Box, Drawer, Slide } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { closeStepContent } from '../../redux/stepContentList';
+import { closeStepContent } from '../../redux/slices/stepContentList';
 
 import useResponsive from '../../utils/useResponsive';
 import ResizeableCard from './ResizeableCard';
 
 function TaskSteps() {
   const isDesktop = useResponsive('up', 'md');
-  const { isOpen } = useSelector((state) => state.stepContent);
+  const isOpen = useSelector((state) => state.stepContent.isOpen);
   const dispatch = useDispatch();
 
   const onCloseTaskSteps = () => {

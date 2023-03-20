@@ -1,10 +1,9 @@
 import { Stack, Typography } from '@mui/material';
-import { fDate } from '../utils/formatTime';
+import { fDate } from '../../utils/formatTime';
 
-function HeaderTaskContent({title}) {
-
+function HeaderTaskContent({ title, sx }) {
   return (
-    <Stack sx={{ pb: '16px' }}>
+    <Stack sx={{ pb: '16px', ...sx }}>
       <Stack
         sx={{
           height: 48,

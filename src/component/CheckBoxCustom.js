@@ -2,7 +2,7 @@ import { Checkbox } from '@mui/material';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-function CheckBoxCustom({ checkedStatus = false, handleChange }) {
+function CheckBoxCustom({ checkedStatus = false, handleChange, sx }) {
   return (
     <Checkbox
       checked={checkedStatus}
@@ -21,6 +21,7 @@ function CheckBoxCustom({ checkedStatus = false, handleChange }) {
             },
           },
         },
+        ...sx,
       }}
     />
   );

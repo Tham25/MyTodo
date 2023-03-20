@@ -1,45 +1,38 @@
-import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Divider, ListItem, ListItemButton, ListItemIcon, Stack } from '@mui/material';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Divider, Stack } from '@mui/material';
 
-import { addNewTaskToList } from '../../redux/taskList';
+import TaskItem from './TaskItem';
+import { addNewTaskToList, getTaskList } from '../../redux/slices/taskList';
 import { sidebarContent } from '../../config/sidebar';
-import ListTaskUserCreate from '../ListTaskUserCreate';
 import InputAddTask from '../InputAddTask';
 
 function SidebarContent() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { pathname } = useLocation();
+  const { taskList } = useSelector((state) => state.taskList);
 
-  const action = (e) => {
+  const handleAddNewTask = (e) => {
     dispatch(addNewTaskToList(e.target.value));
   };
 
-  return (
-    <Stack sx={{ p: 1 }}>
-      {sidebarContent.map((item, index) => {
-        const active = item.navigatePath === pathname.slice(1);
-        return (
-          <ListItem
-            key={`${item.name}-${index}`}
-            className={`${item.name}`}
-            disablePadding
-            sx={{ backgroundColor: active ? '#EFF6FC' : '' }}
-          >
-            <ListItemButton onClick={() => navigate(item.navigatePath, { replace: true })}>
-              <ListItemIcon sx={{ minWidth: '40px' }}>{item.icon}</ListItemIcon>
-              <Box component="span" sx={{ fontSize: 14, fontWeight: active ? 500 : 400 }}>
-                {item.name}
-              </Box>
-            </ListItemButton>
-          </ListItem>
-        );
-      })}
-      <Divider />
-      <ListTaskUserCreate />
+  useEffect(() => {
+    dispatch(getTaskList());
+  }, [dispatch]);
 
-      <InputAddTask action={action} placeholder="Create new list" sx={{ padding: '8px 12px' }} />
+  return (
+    <Stack>
+      {sidebarContent.map((item, index) => (
+        <TaskItem key={`${item.name}-${index}`} item={item} />
+      ))}
+      <Divider sx={{ mt: 1, mb: 1 }} />
+      {taskList.map((item, index) => (
+        <TaskItem key={`${item.name}-${index}`} item={item} isCreateByUser />
+      ))}
+      <InputAddTask
+        action={handleAddNewTask}
+        placeholder="Create new list"
+        sx={{ padding: '12px 20px' }}
+      />
     </Stack>
   );
 }

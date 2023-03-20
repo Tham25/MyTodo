@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getDataFromStorage, setDataToStorage } from '../localStorage';
+import { getDataFromStorage, setDataToStorage } from '../../localStorage';
 
 // dinh dang
 /* {
@@ -45,10 +45,6 @@ export const getStepContentList = () => (dispatch) => {
     const result = getDataFromStorage(keyStorage);
 
     if (result) {
-      // const resultFilter = result.stepContentList.filter(
-      //   (item) => item.taskContentId === taskContentId,
-      // );
-      // console.log('getStepContentList', resultFilter, taskContentId);
       dispatch(slice.actions.setStepContentList(JSON.parse(result)));
     }
   } catch (error) {
@@ -76,16 +72,23 @@ export const addNewStepContentToList = (taskContentId, stepContentName) => (disp
   setDataToStorage(keyStorage, newData);
 };
 
-export const deleteStepContentInList = (stepContentId) => (dispatch, getState) => {
-  const { lastId, stepContentList } = getState().stepContent;
+export const deleteStepContentInList =
+  (stepContentId, taskContentId = []) =>
+  (dispatch, getState) => {
+    const { lastId, stepContentList } = getState().stepContent;
 
-  const list = stepContentList.filter((item) => item.id !== stepContentId);
+    let list;
+    if (taskContentId.length) {
+      list = stepContentList.filter((item) => !taskContentId.includes(item.taskContentId));
+    } else {
+      list = stepContentList.filter((item) => item.id !== stepContentId);
+    }
 
-  const newData = { lastId, stepContentList: list };
+    const newData = { lastId, stepContentList: list };
 
-  dispatch(slice.actions.setStepContentList(newData));
-  setDataToStorage(keyStorage, newData);
-};
+    dispatch(slice.actions.setStepContentList(newData));
+    setDataToStorage(keyStorage, newData);
+  };
 
 export const updateStepContentInList = (updateStepContent) => (dispatch, getState) => {
   const { lastId, stepContentList } = getState().stepContent;

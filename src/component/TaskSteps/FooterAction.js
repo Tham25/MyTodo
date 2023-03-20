@@ -6,8 +6,8 @@ import InputOutlinedIcon from '@mui/icons-material/InputOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { fDate } from '../../utils/formatTime';
-import { closeStepContent } from '../../redux/stepContentList';
-import { deleteTaskContentInList } from '../../redux/taskContentList';
+import { closeStepContent } from '../../redux/slices/stepContentList';
+import { deleteTaskContentInList } from '../../redux/slices/taskContentList';
 import ConfirmDelete from './ConfirmDelete';
 
 function FooterAction({ taskContentActive }) {
@@ -19,7 +19,7 @@ function FooterAction({ taskContentActive }) {
   };
 
   const handleDelete = () => {
-    dispatch(deleteTaskContentInList(taskContentActive));
+    dispatch(deleteTaskContentInList(taskContentActive.id));
     dispatch(closeStepContent());
     setOpenFormDelete(false);
   };

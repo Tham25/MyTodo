@@ -1,4 +1,5 @@
 import { Box, Drawer, Slide } from '@mui/material';
+import { memo } from 'react';
 
 import useResponsive from '../../utils/useResponsive';
 import SidebarContent from './SibarContent';
@@ -17,7 +18,7 @@ function Sidebar({ isOpenSidebar, onCloseSidebar }) {
           onClose={onCloseSidebar}
           transitionDuration={500}
           PaperProps={{
-            sx: { width: DRAWER_WIDTH },
+            sx: { width: DRAWER_WIDTH, overflow: 'scroll' },
           }}
         >
           <SidebarContent />
@@ -33,7 +34,7 @@ function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         className="sidebar-content"
         sx={{
           width: DRAWER_WIDTH,
-          height: '100%',
+          overflow: 'auto',
         }}
       >
         <SidebarContent />
@@ -42,4 +43,4 @@ function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   );
 }
 
-export default Sidebar;
+export default memo(Sidebar);

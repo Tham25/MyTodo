@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Input, InputAdornment, Stack } from '@mui/material';
+import { Box, Input, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 function InputAddTask({ action, placeholder, isTask, sx }) {
@@ -27,14 +27,12 @@ function InputAddTask({ action, placeholder, isTask, sx }) {
         borderRadius: isTask && '3px',
       }}
     >
-      <Box sx={{ display: 'flex', backgroundColor, alignItems: 'center', p: '8px 16px', ...sx }}>
+      <Box sx={{ display: 'flex', backgroundColor, alignItems: 'center', padding: '16px', ...sx }}>
         <Box
           sx={{
             display: 'flex',
             width: '32px',
             justifyContent: 'center',
-            // alignItems: 'center',
-            // backgroundColor: 'red',
           }}
         >
           <AddIcon sx={{ fontSize: 20, color: '#2564CF' }} />
@@ -46,6 +44,8 @@ function InputAddTask({ action, placeholder, isTask, sx }) {
           onChange={handleChangeText}
           onKeyDown={handleSubmit}
           sx={{
+            flex: 1,
+            height: 20,
             padding: '0 16px',
             '& .MuiInputBase-input.MuiInput-input:focus::placeholder': {
               color: '#727272',
@@ -55,17 +55,9 @@ function InputAddTask({ action, placeholder, isTask, sx }) {
               opacity: 1,
               fontSize: 14,
             },
-            // flex: 1,
-            // textDecoration: !onChangText && checkedStatus ? 'line-through' : 'none',
-            // ...sx,
           }}
         />
       </Box>
-      {isTask && (
-        <Box
-          sx={{ color: '#FAF9F8', width: '100%', height: '46px', borderTop: '1px solid #ccc' }}
-        ></Box>
-      )}
     </Stack>
   );
 }
