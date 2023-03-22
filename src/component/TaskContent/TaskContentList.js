@@ -8,7 +8,7 @@ import { addNewTaskContentToList, getTaskContentList } from '../../redux/slices/
 import InputAddTask from '../InputAddTask';
 import TaskContentItem from './TaskContentItem';
 
-function TaskContentList({ taskName }) {
+function TaskContentList({ taskName, note }) {
   const dispatch = useDispatch();
   const taskContentList = useSelector((state) => state.taskContent.taskContentList);
   const [openListDone, setOpentListDone] = useState(false);
@@ -39,8 +39,12 @@ function TaskContentList({ taskName }) {
     dispatch(getTaskContentList());
   }, [dispatch]);
 
-  const action = (e) => {
-    dispatch(addNewTaskContentToList(taskName, e.target.value));
+  const handleCreateNewTaskContent = (e) => {
+    let pathBonus = '';
+    if (!!note) {
+      pathBonus = `${taskName}/`;
+    }
+    dispatch(addNewTaskContentToList(taskName, e.target.value, pathBonus));
   };
 
   return (
@@ -55,7 +59,7 @@ function TaskContentList({ taskName }) {
       }}
     >
       <Box sx={{ margin: '0 24px' }}>
-        <InputAddTask action={action} placeholder="Create a new task" isTask />
+        <InputAddTask action={handleCreateNewTaskContent} placeholder="Create a new task" isTask />
       </Box>
       <Box
         sx={{

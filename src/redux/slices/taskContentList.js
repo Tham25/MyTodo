@@ -68,41 +68,43 @@ export const getTaskContentList = () => (dispatch) => {
   }
 };
 
-export const addNewTaskContentToList = (taskListName, taskContentName) => (dispatch, getState) => {
-  const { lastId, taskContentList } = getState().taskContent;
+export const addNewTaskContentToList =
+  (taskListName, taskContentName, pathBonus = '') =>
+  (dispatch, getState) => {
+    const { lastId, taskContentList } = getState().taskContent;
 
-  const nameEnglish = taskContentName
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/\s+/g, '');
+    const nameEnglish = taskContentName
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, '');
 
-  const newTaskList = [
-    ...taskContentList,
-    {
-      id: lastId + 1,
-      taskListName:
-        taskListName === 'Important' || taskListName === 'My day' ? 'Task Default' : taskListName,
-      taskContentName,
-      isComplete: false,
-      timeCreate: fDateString(new Date()),
-      pathName: nameEnglish,
-      isImportant: taskListName === 'Important',
-      isMyday: taskListName === 'My day',
-    },
-  ];
-  // check id
+    const newTaskList = [
+      ...taskContentList,
+      {
+        id: lastId + 1,
+        taskListName:
+          taskListName === 'Important' || taskListName === 'My day' ? 'Task Default' : taskListName,
+        taskContentName,
+        isComplete: false,
+        timeCreate: fDateString(new Date()),
+        pathName: pathBonus + nameEnglish,
+        isImportant: taskListName === 'Important',
+        isMyday: taskListName === 'My day',
+      },
+    ];
+    // check id
 
-  const newData = {
-    lastId: lastId + 1,
-    taskContentList: newTaskList,
+    const newData = {
+      lastId: lastId + 1,
+      taskContentList: newTaskList,
+    };
+
+    // luu vao storage
+
+    dispatch(slice.actions.setTaskContentList(newData));
+
+    setDataToStorage(keyStorage, newData);
   };
-
-  // luu vao storage
-
-  dispatch(slice.actions.setTaskContentList(newData));
-
-  setDataToStorage(keyStorage, newData);
-};
 
 export const deleteTaskContentInList =
   (taskContentId, taskListName = '') =>

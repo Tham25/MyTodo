@@ -1,16 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
-import {
-  Box,
-  Divider,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  Popover,
-  Menu,
-  List,
-} from '@mui/material';
+import { Box, Divider, ListItem, ListItemButton, ListItemIcon, Menu, List } from '@mui/material';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -19,12 +10,14 @@ import { closeStepContent } from '../../redux/slices/stepContentList';
 import { useSelector } from 'react-redux';
 import { addNewTaskToList, deleteTaskInList } from '../../redux/slices/taskList';
 import { sidebarContent } from '../../config/sidebar';
+import { getTaskContentList } from '../../redux/slices/taskContentList';
 
 function TaskItem({ item, isCreateByUser }) {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const position = useRef({ left: 0, top: 0 });
   const navigate = useNavigate();
+  const taskContentList = useSelector((state) => state.taskContent.taskContentList);
 
   const handleClick = () => {
     dispatch(closeStepContent());
@@ -39,6 +32,29 @@ function TaskItem({ item, isCreateByUser }) {
       setAnchorEl(event.currentTarget);
     }
   };
+
+  const numberTaskContent = useMemo(() => {
+    let num = 0;
+
+    switch (item.name) {
+      case 'My day':
+        num = taskContentList.filter((element) => element.isMyday).length;
+        break;
+      case 'Important':
+        num = taskContentList.filter((element) => element.isImportant).length;
+        break;
+
+      default:
+        num = taskContentList.filter((element) => element.taskListName === item.name).length;
+        break;
+    }
+
+    return num;
+  }, [item.name, taskContentList]);
+
+  useEffect(() => {
+    dispatch(getTaskContentList());
+  }, [dispatch]);
 
   return (
     <ListItem
@@ -77,7 +93,7 @@ function TaskItem({ item, isCreateByUser }) {
           {isCreateByUser ? <FormatListBulletedIcon sx={{ fontSize: 20 }} /> : item.icon}
         </ListItemIcon>
         <Box sx={{ flex: 1 }}>{item.name}</Box>
-        <Box>2</Box>
+        <Box>{numberTaskContent !== 0 ? numberTaskContent : null}</Box>
       </NavLink>
 
       <PopoverAction
