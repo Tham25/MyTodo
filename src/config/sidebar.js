@@ -6,16 +6,16 @@ export const sidebarContent = [
   {
     name: 'My day',
     icon: <TbSun size={20} />,
-    navigatePath: 'myday',
+    navigatePath: 'MyTodo/myday',
   },
   {
     name: 'Important',
     icon: <AiOutlineStar size={20} />,
-    navigatePath: 'important',
+    navigatePath: 'MyTodo/important',
   },
   {
     name: 'Task Default',
     icon: <HomeIcon sx={{ fontSize: 20 }} />,
-    navigatePath: 'taskDefault',
+    navigatePath: 'MyTodo/taskDefault',
   },
 ];

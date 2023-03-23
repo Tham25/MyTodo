@@ -42,11 +42,11 @@ function Homepage() {
       </Stack>
       <Stack id="task-content" sx={{ backgroundColor: '#FAF9F8', p: 0, flex: 1 }}>
         <Routes>
-          <Route path="/" element={<Navigate to="myday" />} />
-          <Route path="myday/*" element={<MyDay />} />
-          <Route path="important/*" element={<Important />} />
-          <Route path="taskDefault/*" element={<TaskDefault />} />
-          <Route path="task/*" element={<TaskUserAdd />} />
+          <Route path="/" element={<Navigate to="MyTodo/myday" />} />
+          <Route path="/MyTodo/myday/*" element={<MyDay />} />
+          <Route path="/MyTodo/important/*" element={<Important />} />
+          <Route path="/MyTodo/taskDefault/*" element={<TaskDefault />} />
+          <Route path="/MyTodo/task/*" element={<TaskUserAdd />} />
         </Routes>
       </Stack>
       <TaskSteps />

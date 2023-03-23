@@ -46,7 +46,7 @@ export const addNewTaskToList = (nameTask) => (dispatch, getState) => {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, '');
 
-  const navigatePath = `task/${nameEnglish}`; // TaskUserAdd
+  const navigatePath = `MyTodo/task/${nameEnglish}`; // TaskUserAdd
 
   dispatch(taskSlice.actions.setTaskList([...taskList, { name, navigatePath }]));
   setDataToStorage(keyStorage, [...taskList, { name, navigatePath }]);
