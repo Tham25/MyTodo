@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IconButton, Stack } from '@mui/material';
@@ -42,7 +42,7 @@ function Homepage() {
       </Stack>
       <Stack id="task-content" sx={{ backgroundColor: '#FAF9F8', p: 0, flex: 1 }}>
         <Routes>
-          <Route path="/" element={<Navigate to="MyTodo/myday" />} />
+          <Route path="/MyTodo/" element={<Navigate to="myday" />} />
           <Route path="/MyTodo/myday/*" element={<MyDay />} />
           <Route path="/MyTodo/important/*" element={<Important />} />
           <Route path="/MyTodo/taskDefault/*" element={<TaskDefault />} />
