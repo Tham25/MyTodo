@@ -20,7 +20,7 @@ import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { TbSun, TbSunOff } from 'react-icons/tb';
 
 import CheckBoxCustom from '../CheckBoxCustom';
-import { openStepContent } from '../../redux/slices/stepContentList';
+import { closeStepContent, openStepContent } from '../../redux/slices/stepContentList';
 import {
   deleteTaskContentInList,
   setTaskContentOpen,
@@ -62,6 +62,7 @@ function TaskContentItem({ taskContentItem, isTitle, sxIcon }) {
     setAnchorEl(event.currentTarget);
     navigate(taskContentItem.pathName, { replace: true });
     dispatch(setTaskContentOpen(taskContentItem));
+    dispatch(openStepContent());
   };
 
   // for text input
@@ -118,6 +119,13 @@ function TaskContentItem({ taskContentItem, isTitle, sxIcon }) {
         break;
     }
   };
+
+
+  const handleDelete = () => {
+    dispatch(deleteTaskContentInList(taskContentItem.id));
+    setOpenFormDelete(false);
+    dispatch(closeStepContent());
+  }
 
   return (
     <>
@@ -207,10 +215,7 @@ function TaskContentItem({ taskContentItem, isTitle, sxIcon }) {
           title={taskContentItem.name}
           open={openFormDelete}
           onClose={() => setOpenFormDelete(false)}
-          handleDelete={() => {
-            dispatch(deleteTaskContentInList(taskContentItem.id));
-            setOpenFormDelete(false);
-          }}
+          handleDelete={handleDelete}
         />
       )}
     </>

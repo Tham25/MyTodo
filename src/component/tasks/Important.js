@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import TaskContent from '../TaskContent';
 
 function Important() {
