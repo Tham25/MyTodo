@@ -45,6 +45,7 @@ function TaskContentItem({ taskContentItem, isTitle, sxIcon }) {
   const handleCheckBox = (e) => {
     e.stopPropagation();
     dispatch(updateTaskContentInList({ ...taskContentItem, isComplete: e.target.checked }));
+    dispatch(setTaskContentOpen({ ...taskContentItem, isComplete: e.target.checked }));
   };
 
   const handleOpenStepList = () => {
@@ -120,12 +121,11 @@ function TaskContentItem({ taskContentItem, isTitle, sxIcon }) {
     }
   };
 
-
   const handleDelete = () => {
     dispatch(deleteTaskContentInList(taskContentItem.id));
     setOpenFormDelete(false);
     dispatch(closeStepContent());
-  }
+  };
 
   return (
     <>
